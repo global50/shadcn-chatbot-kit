@@ -77,6 +77,9 @@ export const registry: Registry = [
       "button",
       `${siteConfig.url}/r/use-autosize-textarea.json`,
       `${siteConfig.url}/r/file-preview.json`,
+      `${siteConfig.url}/r/audio-visualizer.json`,
+      `${siteConfig.url}/r/interrupt-prompt.json`,
+      `${siteConfig.url}/r/use-audio-recording.json`,
     ],
   },
   {
@@ -126,6 +129,32 @@ export const registry: Registry = [
     files: ["ui/file-preview.tsx"],
     dependencies: ["framer-motion@11"],
   },
+  {
+    name: "audio-visualizer",
+    type: "registry:ui",
+    files: ["ui/audio-visualizer.tsx"],
+  },
+  {
+    name: "interrupt-prompt",
+    type: "registry:ui",
+    files: ["ui/interrupt-prompt.tsx"],
+    dependencies: ["framer-motion@11"],
+  },
+  {
+    name: "audio-utils",
+    type: "registry:lib",
+    files: ["lib/audio-utils.ts"],
+  },
+  {
+    name: "use-audio-recording",
+    type: "registry:hook",
+    files: ["hooks/use-audio-recording.ts"],
+    registryDependencies: [`${siteConfig.url}/r/audio-utils.json`],
+  },
+
+  /* ------------------------------------------------------------
+   * Demo components
+   * ------------------------------------------------------------ */
   {
     name: "chat-demo",
     type: "registry:example",
@@ -203,5 +232,11 @@ export const registry: Registry = [
     type: "registry:example",
     description: "Copy button within a code block",
     files: ["example/copy-button-code-block-demo.tsx"],
+  },
+  {
+    name: "file-preview-demo",
+    type: "registry:example",
+    description: "A basic file preview implementation",
+    files: ["example/file-preview-demo.tsx"],
   },
 ]

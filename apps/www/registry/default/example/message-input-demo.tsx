@@ -2,6 +2,8 @@
 
 import { useRef, useState } from "react"
 
+import { transcribeAudio } from "@/lib/utils/audio"
+
 import { ChatForm } from "../ui/chat"
 import { MessageInput } from "../ui/message-input"
 
@@ -49,6 +51,7 @@ export default function MessageInputDemo() {
             cancelTimeout()
           }}
           isGenerating={isGenerating}
+          transcribeAudio={transcribeAudio}
         />
       )}
     </ChatForm>

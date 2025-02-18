@@ -20,6 +20,7 @@ The MessageInput component provides a rich textarea experience with support for 
 - Submit on Enter (configurable)
 - Stop generation button
 - Double-enter interrupt behavior
+- Voice input with transcription
 - Fully customizable styling
 
 ## Installation
@@ -60,6 +61,12 @@ The `MessageInput` component uses the `FilePreview` component. Make sure you hav
 <ComponentSource name="message-input" />
 
 `hooks/use-autosize-textarea.ts`
+
+<ComponentSource name="use-autosize-textarea" />
+
+`hooks/use-audio-recording.ts`
+
+<ComponentSource name="use-audio-recording" />
 
 <Step>Update the import paths to match your project setup.</Step>
 
@@ -151,15 +158,16 @@ The MessageInput component accepts two sets of props depending on whether file a
 
 ### Props
 
-| Prop               | Type         | Description                    | Default     |
-| ------------------ | ------------ | ------------------------------ | ----------- |
-| `value`            | `string`     | Current input value            | Required    |
-| `submitOnEnter`    | `boolean`    | Whether to submit on Enter key | `true`      |
-| `stop`             | `() => void` | Function to stop generation    | -           |
-| `isGenerating`     | `boolean`    | Whether AI is generating       | Required    |
-| `placeholder`      | `string`     | Input placeholder text         | "Ask AI..." |
-| `allowAttachments` | `boolean`    | Enable file attachments        |
-| `enableInterrupt`  | `boolean`    | Enable double-enter interrupt  | `true`      |
+| Prop               | Type                              | Description                    | Default     |
+| ------------------ | --------------------------------- | ------------------------------ | ----------- |
+| `value`            | `string`                          | Current input value            | Required    |
+| `submitOnEnter`    | `boolean`                         | Whether to submit on Enter key | `true`      |
+| `stop`             | `() => void`                      | Function to stop generation    | -           |
+| `isGenerating`     | `boolean`                         | Whether AI is generating       | Required    |
+| `placeholder`      | `string`                          | Input placeholder text         | "Ask AI..." |
+| `allowAttachments` | `boolean`                         | Enable file attachments        | -           |
+| `enableInterrupt`  | `boolean`                         | Enable double-enter interrupt  | `true`      |
+| `transcribeAudio`  | `(blob: Blob) => Promise<string>` | Function to transcribe audio   | -           |
 
 ### With Attachments
 
@@ -171,6 +179,21 @@ When `allowAttachments` is `true`, these additional props are required:
 | `setFiles` | `React.Dispatch<React.SetStateAction<File[] \| null>>` | Files state setter       |
 
 The component also accepts all standard textarea HTML attributes.
+
+### Voice Input
+
+Enable voice input with audio transcription:
+
+```tsx
+<MessageInput
+  value={input}
+  onChange={handleInputChange}
+  isGenerating={false}
+  transcribeAudio={transcribeAudio}
+/>
+```
+
+The voice input button will only be shown if the `transcribeAudio` prop is provided. This function should take a Blob of recorded audio and return a Promise that resolves to the transcribed text.
 
 ## Features
 

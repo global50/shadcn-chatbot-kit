@@ -2,6 +2,7 @@
 
 import { useChat, type UseChatOptions } from "ai/react"
 
+import { transcribeAudio } from "@/lib/utils/audio"
 import { Chat } from "@/registry/default/ui/chat"
 
 type ChatDemoProps = {
@@ -32,6 +33,7 @@ export default function ChatDemo(props: ChatDemoProps) {
         stop={stop}
         append={append}
         setMessages={setMessages}
+        transcribeAudio={transcribeAudio}
         suggestions={[
           "Generate a tasty vegan lasagna recipe for 3 people.",
           "Generate a list of 5 questions for a job interview for a software engineer.",

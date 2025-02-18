@@ -84,6 +84,11 @@ export const docsConfig: DocsConfig = {
           href: "/docs/components/file-preview",
           items: [],
         },
+        {
+          title: "Audio Visualizer",
+          href: "/docs/components/audio-visualizer",
+          items: [],
+        },
       ],
     },
   ],

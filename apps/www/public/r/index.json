@@ -90,7 +90,10 @@
     "registryDependencies": [
       "button",
       "https://shadcn-chatbot-kit.vercel.app/r/use-autosize-textarea.json",
-      "https://shadcn-chatbot-kit.vercel.app/r/file-preview.json"
+      "https://shadcn-chatbot-kit.vercel.app/r/file-preview.json",
+      "https://shadcn-chatbot-kit.vercel.app/r/audio-visualizer.json",
+      "https://shadcn-chatbot-kit.vercel.app/r/interrupt-prompt.json",
+      "https://shadcn-chatbot-kit.vercel.app/r/use-audio-recording.json"
     ],
     "files": [
       {
@@ -163,6 +166,29 @@
     "files": [
       {
         "path": "ui/file-preview.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  {
+    "name": "audio-visualizer",
+    "type": "registry:ui",
+    "files": [
+      {
+        "path": "ui/audio-visualizer.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  {
+    "name": "interrupt-prompt",
+    "type": "registry:ui",
+    "dependencies": [
+      "framer-motion@11"
+    ],
+    "files": [
+      {
+        "path": "ui/interrupt-prompt.tsx",
         "type": "registry:ui"
       }
     ]

@@ -212,11 +212,12 @@ A prebuilt Chat component that provides a complete chat interface with message h
 | `handleSubmit`      | `(event?, options?) => void`                                        | Form submission handler                                                                                  |
 | `isGenerating`      | `boolean`                                                           | Whether AI is currently generating a response                                                            |
 | `stop`              | `() => void`                                                        | Function to stop AI generation                                                                           |
-| `setMessages`       | `(messages: Message[]) => void`                                     | Optional function to update messages state. When provided, enables enhanced tool cancellation handling |
+| `setMessages`       | `(messages: Message[]) => void`                                     | Optional function to update messages state. When provided, enables enhanced tool cancellation handling   |
 | `append?`           | `(message: Message) => void`                                        | Function to append a new message (required for suggestions)                                              |
 | `suggestions?`      | `string[]`                                                          | Array of prompt suggestions to show when chat is empty                                                   |
 | `onRateResponse?`   | `(messageId: string, rating: "thumbs-up" \| "thumbs-down") => void` | Callback to handle user rating of AI responses, if not provided the rating buttons will not be displayed |
 | `className?`        | `string`                                                            | Additional CSS classes for ChatContainer                                                                 |
+| `transcribeAudio`   | `(blob: Blob) => Promise<string>`                                   | Function to transcribe audio (required for voice input, see message input docs for more info)            |
 
 ## ChatContainer
 
