@@ -1,6 +1,12 @@
 "use client"
 
-import { forwardRef, useCallback, useState, type ReactElement } from "react"
+import {
+  forwardRef,
+  useCallback,
+  useRef,
+  useState,
+  type ReactElement,
+} from "react"
 import { ArrowDown, ThumbsDown, ThumbsUp } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -27,6 +33,7 @@ interface ChatPropsBase {
     messageId: string,
     rating: "thumbs-up" | "thumbs-down"
   ) => void
+  setMessages?: (messages: any[]) => void
 }
 
 interface ChatPropsWithoutSuggestions extends ChatPropsBase {
@@ -52,10 +59,55 @@ export function Chat({
   suggestions,
   className,
   onRateResponse,
+  setMessages,
 }: ChatProps) {
   const lastMessage = messages.at(-1)
   const isEmpty = messages.length === 0
   const isTyping = lastMessage?.role === "user"
+
+  const messagesRef = useRef(messages)
+  messagesRef.current = messages
+
+  // Enhanced stop function that marks pending tool calls as cancelled
+  const handleStop = useCallback(() => {
+    stop?.()
+
+    if (!setMessages) return
+
+    const latestMessages = [...messagesRef.current]
+    const lastAssistantMessage = latestMessages.findLast(
+      (m) => m.role === "assistant"
+    )
+
+    if (lastAssistantMessage && lastAssistantMessage.toolInvocations) {
+      const updatedToolInvocations = lastAssistantMessage.toolInvocations.map(
+        (toolInvocation) => {
+          if (toolInvocation.state === "call") {
+            return {
+              ...toolInvocation,
+              state: "result",
+              result: {
+                content: "Tool execution was cancelled",
+                __cancelled: true, // Special marker to indicate cancellation
+              },
+            } as const
+          }
+          return toolInvocation
+        }
+      )
+
+      const messageIndex = latestMessages.findIndex(
+        (m) => m.id === lastAssistantMessage.id
+      )
+      if (messageIndex !== -1) {
+        latestMessages[messageIndex] = {
+          ...lastAssistantMessage,
+          toolInvocations: updatedToolInvocations,
+        }
+        setMessages(latestMessages)
+      }
+    }
+  }, [stop, setMessages, messagesRef])
 
   const messageOptions = useCallback(
     (message: Message) => ({
@@ -126,7 +178,7 @@ export function Chat({
             allowAttachments
             files={files}
             setFiles={setFiles}
-            stop={stop}
+            stop={handleStop}
             isGenerating={isGenerating}
           />
         )}

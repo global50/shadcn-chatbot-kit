@@ -17,6 +17,7 @@ export default function ChatDemo(props: ChatDemoProps) {
     append,
     stop,
     isLoading,
+    setMessages,
   } = useChat(props)
 
   return (
@@ -30,6 +31,7 @@ export default function ChatDemo(props: ChatDemoProps) {
         isGenerating={isLoading}
         stop={stop}
         append={append}
+        setMessages={setMessages}
         suggestions={[
           "Generate a tasty vegan lasagna recipe for 3 people.",
           "Generate a list of 5 questions for a job interview for a software engineer.",
