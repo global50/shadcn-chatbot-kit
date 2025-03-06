@@ -2,6 +2,7 @@ import { createOpenAI } from "@ai-sdk/openai"
 import { convertToCoreMessages, streamText, tool } from "ai"
 import { z } from "zod"
 
+import { delay } from "@/lib/delay"
 import { getWeather } from "@/lib/weather"
 
 export const maxDuration = 30
@@ -33,6 +34,18 @@ export async function POST(req: Request) {
         }),
         execute: async ({ location }) => {
           return await getWeather(location)
+        },
+      }),
+      delay: tool({
+        description: "Pauses the chatbot for a given duration",
+        parameters: z.object({
+          duration: z
+            .number()
+            .positive()
+            .describe("The duration to pause in seconds"),
+        }),
+        execute: async ({ duration }) => {
+          await delay(duration)
         },
       }),
     },
