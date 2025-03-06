@@ -9,7 +9,23 @@ A comprehensive chatbot component kit built on top of and fully compatible with 
 
 ## ✨ Features
 
+- 💬 **Rich Chat Interface**: Beautiful interactions and animations for a polished experience
+- 📎 **Advanced Attachments**:
+  - Smart preview for uploaded files
+  - Auto-conversion of long text to attachments
+  - Markdown support with syntax highlighting
+- 🧠 **Thinking Process**: Visual block showing LLM reasoning and thought process (🚧 WIP)
+- 🛠️ **Tool Integration**:
+  - Visual tool execution states
+  - Cancel support for running operations
+  - Smart interrupt prompts
 - 🎨 **Fully Themeable**: Leverages shadcn/ui's theming system for complete visual customization
+- 🌓 **Dark/Light Mode**: Built-in theme switching support
+- 🎯 **Developer Experience**:
+  - Works seamlessly with shadcn CLI
+  - Easy component installation and updates
+  - Composable API design for custom implementations
+- 🎤 **Voice Input**: Speech-to-text support for hands-free interaction (🚧 WIP)
 - 📦 **Copy & Paste Components**: Install only what you need, own your components
 - 🔧 **Highly Customizable**: Modify any aspect of the components to match your needs
 - 📱 **Responsive Design**: Works seamlessly across all device sizes
