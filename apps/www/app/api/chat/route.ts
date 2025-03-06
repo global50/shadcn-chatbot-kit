@@ -45,7 +45,7 @@ export async function POST(req: Request) {
             .describe("The duration to pause in seconds"),
         }),
         execute: async ({ duration }) => {
-          await delay(duration)
+          return await delay(duration)
         },
       }),
     },
