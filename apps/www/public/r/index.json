@@ -50,9 +50,9 @@
     "name": "markdown-renderer",
     "type": "registry:ui",
     "dependencies": [
-      "react-markdown",
-      "remark-gfm",
-      "shiki"
+      "react-markdown@10",
+      "remark-gfm@4",
+      "shiki@1"
     ],
     "registryDependencies": [
       "https://shadcn-chatbot-kit.vercel.app/r/copy-button.json"

@@ -49,7 +49,7 @@ export const registry: Registry = [
     name: "markdown-renderer",
     type: "registry:ui",
     files: ["ui/markdown-renderer.tsx"],
-    dependencies: ["react-markdown", "remark-gfm", "shiki"],
+    dependencies: ["react-markdown@10", "remark-gfm@4", "shiki@1"],
     registryDependencies: [`${siteConfig.url}/r/copy-button.json`],
     tailwind: {
       config: {
