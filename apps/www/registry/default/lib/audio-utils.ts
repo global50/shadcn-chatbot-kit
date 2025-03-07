@@ -24,7 +24,7 @@ export const recordAudio = (function (): RecordAudioType {
           resolve(audioBlob)
         }
 
-        mediaRecorder.onerror = (event: Event) => {
+        mediaRecorder.onerror = () => {
           reject(new Error("MediaRecorder error occurred"))
         }
 

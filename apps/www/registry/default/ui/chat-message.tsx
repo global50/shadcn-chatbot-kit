@@ -240,6 +240,8 @@ function ToolCall({
                 </pre>
               </div>
             )
+          default:
+            return null
         }
       })}
     </div>

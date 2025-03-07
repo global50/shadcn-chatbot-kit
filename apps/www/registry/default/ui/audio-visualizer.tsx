@@ -56,6 +56,7 @@ export function AudioVisualizer({
     } else {
       cleanup()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stream, isRecording])
 
   // Handle window resize
@@ -188,7 +189,7 @@ export function AudioVisualizer({
   return (
     <div
       ref={containerRef}
-      className="w-full h-full cursor-pointer rounded-lg bg-background/80 backdrop-blur"
+      className="h-full w-full cursor-pointer rounded-lg bg-background/80 backdrop-blur"
       onClick={onClick}
     >
       <canvas ref={canvasRef} className="h-full w-full" />
