@@ -24,8 +24,10 @@ export const registry: Registry = [
     name: "chat-message",
     type: "registry:ui",
     files: ["ui/chat-message.tsx"],
+    dependencies: ["framer-motion@11"],
     registryDependencies: [
       "button",
+      "collapsible",
       `${siteConfig.url}/r/copy-button.json`,
       `${siteConfig.url}/r/markdown-renderer.json`,
     ],
@@ -214,12 +216,6 @@ export const registry: Registry = [
     type: "registry:example",
     description: "Chat message with timestamp display",
     files: ["example/chat-message-timestamp-demo.tsx"],
-  },
-  {
-    name: "chat-message-custom-styling-demo",
-    type: "registry:example",
-    description: "Chat message with custom styling options",
-    files: ["example/chat-message-custom-styling-demo.tsx"],
   },
   {
     name: "copy-button-custom-message-demo",

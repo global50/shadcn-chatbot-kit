@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useChat, type UseChatOptions } from "ai/react"
+import { useChat, type UseChatOptions } from "@ai-sdk/react"
 
 import { cn } from "@/lib/utils"
 import { transcribeAudio } from "@/lib/utils/audio"

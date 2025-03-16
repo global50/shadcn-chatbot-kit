@@ -20,8 +20,12 @@
   {
     "name": "chat-message",
     "type": "registry:ui",
+    "dependencies": [
+      "framer-motion@11"
+    ],
     "registryDependencies": [
       "button",
+      "collapsible",
       "https://shadcn-chatbot-kit.vercel.app/r/copy-button.json",
       "https://shadcn-chatbot-kit.vercel.app/r/markdown-renderer.json"
     ],

@@ -7,10 +7,25 @@ import { getWeather } from "@/lib/weather"
 
 export const maxDuration = 30
 
-const groq = createGroq()
+const LLAMA_MODEL = "llama-3.3-70b-versatile"
+const DEEPSEEK_MODEL = "deepseek-r1-distill-llama-70b"
+
+const groq = createGroq({
+  fetch: async (url, options) => {
+    if (options?.body) {
+      const body = JSON.parse(options.body as string)
+      if (body?.model === DEEPSEEK_MODEL) {
+        body.reasoning_format = "parsed"
+        options.body = JSON.stringify(body)
+      }
+    }
+
+    return fetch(url, options)
+  },
+})
 
 export async function POST(req: Request) {
-  const { messages, model = "llama-3.3-70b-versatile" } = await req.json()
+  const { messages, model = LLAMA_MODEL } = await req.json()
 
   const result = streamText({
     model: groq(model),

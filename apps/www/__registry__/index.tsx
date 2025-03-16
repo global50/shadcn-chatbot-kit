@@ -30,7 +30,7 @@ export const Index: Record<string, any> = {
     "chat-message": {
       name: "chat-message",
       type: "registry:ui",
-      registryDependencies: ["button","https://shadcn-chatbot-kit.vercel.app/r/copy-button.json","https://shadcn-chatbot-kit.vercel.app/r/markdown-renderer.json"],
+      registryDependencies: ["button","collapsible","https://shadcn-chatbot-kit.vercel.app/r/copy-button.json","https://shadcn-chatbot-kit.vercel.app/r/markdown-renderer.json"],
       files: ["registry/default/ui/chat-message.tsx"],
       component: React.lazy(() => import("@/registry/default/ui/chat-message.tsx")),
       source: "",
@@ -297,17 +297,6 @@ export const Index: Record<string, any> = {
       registryDependencies: undefined,
       files: ["registry/default/example/chat-message-timestamp-demo.tsx"],
       component: React.lazy(() => import("@/registry/default/example/chat-message-timestamp-demo.tsx")),
-      source: "",
-      category: "undefined",
-      subcategory: "undefined",
-      chunks: []
-    },
-    "chat-message-custom-styling-demo": {
-      name: "chat-message-custom-styling-demo",
-      type: "registry:example",
-      registryDependencies: undefined,
-      files: ["registry/default/example/chat-message-custom-styling-demo.tsx"],
-      component: React.lazy(() => import("@/registry/default/example/chat-message-custom-styling-demo.tsx")),
       source: "",
       category: "undefined",
       subcategory: "undefined",

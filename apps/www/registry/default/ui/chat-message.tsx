@@ -1,10 +1,16 @@
 "use client"
 
-import React, { useMemo } from "react"
+import React, { useMemo, useState } from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { Ban, Code2, Loader2, Terminal } from "lucide-react"
+import { motion } from "framer-motion"
+import { Ban, ChevronRight, Code2, Loader2, Terminal } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/registry/default/ui/collapsible"
 import { FilePreview } from "@/registry/default/ui/file-preview"
 import { MarkdownRenderer } from "@/registry/default/ui/markdown-renderer"
 
@@ -92,7 +98,12 @@ interface TextPart {
   text: string
 }
 
-type MessagePart = TextPart | ReasoningPart | ToolInvocationPart
+// For compatibility with AI SDK types, not used
+interface SourcePart {
+  type: "source"
+}
+
+type MessagePart = TextPart | ReasoningPart | ToolInvocationPart | SourcePart
 
 export interface Message {
   id: string
@@ -101,14 +112,13 @@ export interface Message {
   createdAt?: Date
   experimental_attachments?: Attachment[]
   toolInvocations?: ToolInvocation[]
-  parts?: (MessagePart | unknown)[]
+  parts?: MessagePart[]
 }
 
 export interface ChatMessageProps extends Message {
   showTimeStamp?: boolean
   animation?: Animation
   actions?: React.ReactNode
-  className?: string
 }
 
 export const ChatMessage: React.FC<ChatMessageProps> = ({
@@ -118,9 +128,9 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
   showTimeStamp = false,
   animation = "scale",
   actions,
-  className,
   experimental_attachments,
   toolInvocations,
+  parts,
 }) => {
   const files = useMemo(() => {
     return experimental_attachments?.map((attachment) => {
@@ -130,10 +140,6 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
     })
   }, [experimental_attachments])
 
-  if (toolInvocations && toolInvocations.length > 0) {
-    return <ToolCall toolInvocations={toolInvocations} />
-  }
-
   const isUser = role === "user"
 
   const formattedTime = createdAt?.toLocaleTimeString("en-US", {
@@ -141,22 +147,94 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
     minute: "2-digit",
   })
 
-  return (
-    <div className={cn("flex flex-col", isUser ? "items-end" : "items-start")}>
-      {files ? (
-        <div className="mb-1 flex flex-wrap gap-2">
-          {files.map((file, index) => {
-            return <FilePreview file={file} key={index} />
-          })}
-        </div>
-      ) : null}
+  if (isUser) {
+    return (
+      <div
+        className={cn("flex flex-col", isUser ? "items-end" : "items-start")}
+      >
+        {files ? (
+          <div className="mb-1 flex flex-wrap gap-2">
+            {files.map((file, index) => {
+              return <FilePreview file={file} key={index} />
+            })}
+          </div>
+        ) : null}
 
-      <div className={cn(chatBubbleVariants({ isUser, animation }), className)}>
-        <div>
+        <div className={cn(chatBubbleVariants({ isUser, animation }))}>
           <MarkdownRenderer>{content}</MarkdownRenderer>
         </div>
 
-        {role === "assistant" && actions ? (
+        {showTimeStamp && createdAt ? (
+          <time
+            dateTime={createdAt.toISOString()}
+            className={cn(
+              "mt-1 block px-1 text-xs opacity-50",
+              animation !== "none" && "duration-500 animate-in fade-in-0"
+            )}
+          >
+            {formattedTime}
+          </time>
+        ) : null}
+      </div>
+    )
+  }
+
+  if (parts && parts.length > 0) {
+    return parts.map((part, index) => {
+      if (part.type === "text") {
+        return (
+          <div
+            className={cn(
+              "flex flex-col",
+              isUser ? "items-end" : "items-start"
+            )}
+            key={`text-${index}`}
+          >
+            <div className={cn(chatBubbleVariants({ isUser, animation }))}>
+              <MarkdownRenderer>{part.text}</MarkdownRenderer>
+              {actions ? (
+                <div className="absolute -bottom-4 right-2 flex space-x-1 rounded-lg border bg-background p-1 text-foreground opacity-0 transition-opacity group-hover/message:opacity-100">
+                  {actions}
+                </div>
+              ) : null}
+            </div>
+
+            {showTimeStamp && createdAt ? (
+              <time
+                dateTime={createdAt.toISOString()}
+                className={cn(
+                  "mt-1 block px-1 text-xs opacity-50",
+                  animation !== "none" && "duration-500 animate-in fade-in-0"
+                )}
+              >
+                {formattedTime}
+              </time>
+            ) : null}
+          </div>
+        )
+      } else if (part.type === "reasoning") {
+        return <ReasoningBlock key={`reasoning-${index}`} part={part} />
+      } else if (part.type === "tool-invocation") {
+        return (
+          <ToolCall
+            key={`tool-${index}`}
+            toolInvocations={[part.toolInvocation]}
+          />
+        )
+      }
+      return null
+    })
+  }
+
+  if (toolInvocations && toolInvocations.length > 0) {
+    return <ToolCall toolInvocations={toolInvocations} />
+  }
+
+  return (
+    <div className={cn("flex flex-col", isUser ? "items-end" : "items-start")}>
+      <div className={cn(chatBubbleVariants({ isUser, animation }))}>
+        <MarkdownRenderer>{content}</MarkdownRenderer>
+        {actions ? (
           <div className="absolute -bottom-4 right-2 flex space-x-1 rounded-lg border bg-background p-1 text-foreground opacity-0 transition-opacity group-hover/message:opacity-100">
             {actions}
           </div>
@@ -184,6 +262,47 @@ function dataUrlToUint8Array(data: string) {
   return new Uint8Array(buf)
 }
 
+const ReasoningBlock = ({ part }: { part: ReasoningPart }) => {
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <div className="mb-2 flex flex-col items-start sm:max-w-[70%]">
+      <Collapsible
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        className="group w-full overflow-hidden rounded-lg border bg-muted/50"
+      >
+        <div className="flex items-center p-2">
+          <CollapsibleTrigger asChild>
+            <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+              <ChevronRight className="h-4 w-4 transition-transform group-data-[state=open]:rotate-90" />
+              <span>Thinking</span>
+            </button>
+          </CollapsibleTrigger>
+        </div>
+        <CollapsibleContent forceMount>
+          <motion.div
+            initial={false}
+            animate={isOpen ? "open" : "closed"}
+            variants={{
+              open: { height: "auto", opacity: 1 },
+              closed: { height: 0, opacity: 0 },
+            }}
+            transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
+            className="border-t"
+          >
+            <div className="p-2">
+              <div className="whitespace-pre-wrap text-xs">
+                {part.reasoning}
+              </div>
+            </div>
+          </motion.div>
+        </CollapsibleContent>
+      </Collapsible>
+    </div>
+  )
+}
+
 function ToolCall({
   toolInvocations,
 }: Pick<ChatMessageProps, "toolInvocations">) {
@@ -200,7 +319,7 @@ function ToolCall({
           return (
             <div
               key={index}
-              className="flex items-center gap-2 rounded-lg border bg-muted px-3 py-2 text-sm text-muted-foreground"
+              className="flex items-center gap-2 rounded-lg border bg-muted/50 px-3 py-2 text-sm text-muted-foreground"
             >
               <Ban className="h-4 w-4" />
               <span>
@@ -221,7 +340,7 @@ function ToolCall({
             return (
               <div
                 key={index}
-                className="flex items-center gap-2 rounded-lg border bg-muted px-3 py-2 text-sm text-muted-foreground"
+                className="flex items-center gap-2 rounded-lg border bg-muted/50 px-3 py-2 text-sm text-muted-foreground"
               >
                 <Terminal className="h-4 w-4" />
                 <span>
@@ -240,7 +359,7 @@ function ToolCall({
             return (
               <div
                 key={index}
-                className="flex flex-col gap-1.5 rounded-lg border bg-muted px-3 py-2 text-sm"
+                className="flex flex-col gap-1.5 rounded-lg border bg-muted/50 px-3 py-2 text-sm"
               >
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Code2 className="h-4 w-4" />
