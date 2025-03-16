@@ -72,9 +72,9 @@ export default function ChatDemo(props: ChatDemoProps) {
         setMessages={setMessages}
         transcribeAudio={transcribeAudio}
         suggestions={[
-          "Generate a tasty vegan lasagna recipe for 3 people.",
-          "Generate a list of 5 questions for a job interview for a software engineer.",
-          "Who won the 2022 FIFA World Cup?",
+          "What is the weather in San Francisco?",
+          "Explain step-by-step how to solve this math problem: If x² + 6x + 9 = 25, what is x?",
+          "Design a simple algorithm to find the longest palindrome in a string.",
         ]}
       />
     </div>
