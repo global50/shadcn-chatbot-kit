@@ -77,6 +77,23 @@ interface ToolResult {
 
 type ToolInvocation = PartialToolCall | ToolCall | ToolResult
 
+interface ReasoningPart {
+  type: "reasoning"
+  reasoning: string
+}
+
+interface ToolInvocationPart {
+  type: "tool-invocation"
+  toolInvocation: ToolInvocation
+}
+
+interface TextPart {
+  type: "text"
+  text: string
+}
+
+type MessagePart = TextPart | ReasoningPart | ToolInvocationPart
+
 export interface Message {
   id: string
   role: "user" | "assistant" | (string & {})
@@ -84,6 +101,7 @@ export interface Message {
   createdAt?: Date
   experimental_attachments?: Attachment[]
   toolInvocations?: ToolInvocation[]
+  parts?: (MessagePart | unknown)[]
 }
 
 export interface ChatMessageProps extends Message {

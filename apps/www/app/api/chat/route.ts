@@ -1,4 +1,4 @@
-import { createOpenAI } from "@ai-sdk/openai"
+import { createGroq } from "@ai-sdk/groq"
 import { convertToCoreMessages, streamText, tool } from "ai"
 import { z } from "zod"
 
@@ -7,17 +7,13 @@ import { getWeather } from "@/lib/weather"
 
 export const maxDuration = 30
 
-const groq = createOpenAI({
-  baseURL: "https://api.groq.com/openai/v1",
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
-  apiKey: process.env.GROQ_API_KEY,
-})
+const groq = createGroq()
 
 export async function POST(req: Request) {
-  const { messages } = await req.json()
+  const { messages, model = "llama-3.3-70b-versatile" } = await req.json()
 
   const result = streamText({
-    model: groq("llama-3.3-70b-versatile"),
+    model: groq(model),
     messages: [
       {
         role: "system",
@@ -51,7 +47,9 @@ export async function POST(req: Request) {
     },
   })
 
-  return result.toDataStreamResponse()
+  return result.toDataStreamResponse({
+    sendReasoning: true,
+  })
 }
 
 const SYSTEM_PROMPT = `You are a helpful AI assistant demonstrating the shadcn-chatbot-kit component library. You aim to be helpful and knowledgeable while showing off the UI capabilities of the chat interface.
