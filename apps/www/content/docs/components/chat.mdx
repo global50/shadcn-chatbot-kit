@@ -77,8 +77,10 @@ import { useChat } from "ai/react"
 import { Chat } from "@/components/ui/chat"
 
 export function ChatDemo() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading, stop } =
+  const { messages, input, handleInputChange, handleSubmit, status, stop } =
     useChat()
+
+  const isLoading = status === 'submitted' || status === 'streaming'
 
   return (
     <Chat
@@ -109,9 +111,11 @@ export function ChatWithSuggestions() {
     handleInputChange,
     handleSubmit,
     append,
-    isLoading,
+    status,
     stop,
   } = useChat()
+
+  const isLoading = status === 'submitted' || status === 'streaming'
 
   return (
     <Chat
@@ -153,10 +157,11 @@ export function CustomChat() {
     handleInputChange,
     handleSubmit,
     append,
-    isLoading,
+    status,
     stop,
   } = useChat()
 
+  const isLoading = status === 'submitted' || status === 'streaming'
   const lastMessage = messages.at(-1)
   const isEmpty = messages.length === 0
   const isTyping = lastMessage?.role === "user"

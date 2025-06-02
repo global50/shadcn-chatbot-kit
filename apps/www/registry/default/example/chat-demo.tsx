@@ -25,7 +25,6 @@ type ChatDemoProps = {
 
 export default function ChatDemo(props: ChatDemoProps) {
   const [selectedModel, setSelectedModel] = useState(MODELS[0].id)
-
   const {
     messages,
     input,
@@ -33,7 +32,7 @@ export default function ChatDemo(props: ChatDemoProps) {
     handleSubmit,
     append,
     stop,
-    isLoading,
+    status,
     setMessages,
   } = useChat({
     ...props,
@@ -42,6 +41,8 @@ export default function ChatDemo(props: ChatDemoProps) {
       model: selectedModel,
     },
   })
+
+  const isLoading = status === "submitted" || status === "streaming"
 
   return (
     <div className={cn("flex", "flex-col", "h-[500px]", "w-full")}>

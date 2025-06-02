@@ -67,8 +67,11 @@ import { useChat } from "ai/react"
 import { Chat } from "@/components/ui/chat"
 
 export function ChatDemo() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading, stop } =
+  const { messages, input, handleInputChange, handleSubmit, status, stop } =
     useChat()
+
+
+  const isLoading = status === 'submitted' || status === 'streaming'
 
   return (
     <Chat
