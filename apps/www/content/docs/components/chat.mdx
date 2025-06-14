@@ -80,7 +80,7 @@ export function ChatDemo() {
   const { messages, input, handleInputChange, handleSubmit, status, stop } =
     useChat()
 
-  const isLoading = status === 'submitted' || status === 'streaming'
+  const isLoading = status === "submitted" || status === "streaming"
 
   return (
     <Chat
@@ -115,7 +115,7 @@ export function ChatWithSuggestions() {
     stop,
   } = useChat()
 
-  const isLoading = status === 'submitted' || status === 'streaming'
+  const isLoading = status === "submitted" || status === "streaming"
 
   return (
     <Chat
