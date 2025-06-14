@@ -1,4 +1,4 @@
-import { createGroq } from "@ai-sdk/groq"
+import { groq } from "@ai-sdk/groq"
 import { convertToCoreMessages, streamText, tool } from "ai"
 import { z } from "zod"
 
@@ -9,20 +9,6 @@ export const maxDuration = 30
 
 const LLAMA_MODEL = "llama-3.3-70b-versatile"
 const DEEPSEEK_MODEL = "deepseek-r1-distill-llama-70b"
-
-const groq = createGroq({
-  fetch: async (url, options) => {
-    if (options?.body) {
-      const body = JSON.parse(options.body as string)
-      if (body?.model === DEEPSEEK_MODEL) {
-        body.reasoning_format = "parsed"
-        options.body = JSON.stringify(body)
-      }
-    }
-
-    return fetch(url, options)
-  },
-})
 
 export async function POST(req: Request) {
   const { messages, model = LLAMA_MODEL } = await req.json()

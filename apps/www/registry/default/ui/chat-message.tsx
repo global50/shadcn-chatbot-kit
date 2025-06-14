@@ -101,9 +101,26 @@ interface TextPart {
 // For compatibility with AI SDK types, not used
 interface SourcePart {
   type: "source"
+  source?: any
 }
 
-type MessagePart = TextPart | ReasoningPart | ToolInvocationPart | SourcePart
+interface FilePart {
+  type: "file"
+  mimeType: string
+  data: string
+}
+
+interface StepStartPart {
+  type: "step-start"
+}
+
+type MessagePart =
+  | TextPart
+  | ReasoningPart
+  | ToolInvocationPart
+  | SourcePart
+  | FilePart
+  | StepStartPart
 
 export interface Message {
   id: string
